@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local logs and storage
+server-debug.log
+storage/
+*.log
+
+# temp scripts
+check-schema-v2.js
+create-search-table.js
+debug-*.js
+schema-inspect.js

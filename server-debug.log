@@ -1,0 +1,153 @@
+2026-01-13T23:19:35.944Z: uploadCVAction started 
+2026-01-13T23:19:35.946Z: Session check {"userId":"12345"}
+2026-01-13T23:19:35.946Z: File received {"name":"Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf","type":"application/pdf","size":1494463}
+2026-01-13T23:19:35.947Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768346375947-981241732-Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf"
+2026-01-13T23:19:35.950Z: File saved successfully 
+2026-01-13T23:19:35.950Z: Starting PDF parsing for text extraction 
+2026-01-13T23:19:36.092Z: pdfParser ready 
+2026-01-13T23:19:36.093Z: getRawTextContent failed, using fallback 
+2026-01-13T23:19:36.093Z: PDF parsed, text length: 
+2026-01-13T23:19:36.093Z: Saving to database 
+2026-01-13T23:19:36.101Z: Fatal upload error: "insert or update on table \"user_cvs\" violates foreign key constraint \"fk_user\""
+2026-01-13T23:24:43.091Z: uploadCVAction started 
+2026-01-13T23:24:43.093Z: Session check {"userId":"12345"}
+2026-01-13T23:24:43.094Z: File received {"name":"Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf","type":"application/pdf","size":1494463}
+2026-01-13T23:24:43.096Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768346683096-55103874-Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf"
+2026-01-13T23:24:43.097Z: File saved successfully 
+2026-01-13T23:24:43.098Z: Starting PDF parsing for text extraction 
+2026-01-13T23:24:43.223Z: pdfParser ready 
+2026-01-13T23:24:43.223Z: getRawTextContent failed, using fallback 
+2026-01-13T23:24:43.223Z: PDF parsed, text length: 
+2026-01-13T23:24:43.223Z: Saving to database 
+2026-01-13T23:24:43.231Z: Fatal upload error: "insert or update on table \"user_cvs\" violates foreign key constraint \"fk_user\""
+2026-01-13T23:27:57.730Z: uploadCVAction started 
+2026-01-13T23:27:57.732Z: Session check {"userId":"12345"}
+2026-01-13T23:27:57.733Z: File received {"name":"Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf","type":"application/pdf","size":1494463}
+2026-01-13T23:27:57.734Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768346877734-903763963-Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf"
+2026-01-13T23:27:57.735Z: File saved successfully 
+2026-01-13T23:27:57.735Z: Starting PDF parsing for text extraction 
+2026-01-13T23:27:57.888Z: pdfParser ready 
+2026-01-13T23:27:57.889Z: getRawTextContent failed, using fallback 
+2026-01-13T23:27:57.889Z: PDF parsed, text length: 
+2026-01-13T23:27:57.889Z: Saving to database 
+2026-01-13T23:27:57.908Z: Database save complete 
+2026-01-13T23:32:51.231Z: uploadCVAction started 
+2026-01-13T23:32:51.234Z: Session check {"userId":"12345"}
+2026-01-13T23:32:51.235Z: File received {"name":"Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf","type":"application/pdf","size":1494463}
+2026-01-13T23:32:51.235Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768347171235-739045181-Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf"
+2026-01-13T23:32:51.235Z: File saved successfully 
+2026-01-13T23:32:51.236Z: Starting PDF parsing for text extraction 
+2026-01-13T23:32:51.354Z: pdfParser ready 
+2026-01-13T23:32:51.355Z: PDF parsed, text length: 5698
+2026-01-13T23:32:51.355Z: Saving to database 
+2026-01-13T23:32:51.412Z: Database save complete 
+2026-01-13T23:53:45.073Z: uploadCVAction started 
+2026-01-13T23:53:45.075Z: Session check {"userId":"12345"}
+2026-01-13T23:53:45.075Z: File received {"name":"Bjorn_Andre_Lie_CV_L.pdf","type":"application/pdf","size":1446110}
+2026-01-13T23:53:45.077Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768348425077-399802594-Bjorn_Andre_Lie_CV_L.pdf"
+2026-01-13T23:53:45.078Z: File saved successfully 
+2026-01-13T23:53:45.078Z: Starting PDF parsing for text extraction 
+2026-01-13T23:53:45.274Z: pdfParser ready 
+2026-01-13T23:53:45.274Z: PDF parsed, text length: 2817
+2026-01-13T23:53:45.274Z: Saving to database 
+2026-01-13T23:53:45.422Z: Database save complete 
+2026-01-14T00:16:08.192Z: uploadCVAction started 
+2026-01-14T00:16:08.195Z: Session check {"userId":"12345"}
+2026-01-14T00:16:08.195Z: File received {"name":"Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf","type":"application/pdf","size":1494463}
+2026-01-14T00:16:08.197Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768349768196-608039960-Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf"
+2026-01-14T00:16:08.198Z: File saved successfully 
+2026-01-14T00:16:08.198Z: Starting PDF parsing for text extraction 
+2026-01-14T00:16:08.319Z: pdfParser ready 
+2026-01-14T00:16:08.320Z: PDF parsed, text length: 5698
+2026-01-14T00:16:08.320Z: Saving to database 
+2026-01-14T00:16:08.369Z: Database save complete 
+2026-01-14T00:18:26.531Z: uploadCVAction started 
+2026-01-14T00:18:26.533Z: Session check {"userId":"12346"}
+2026-01-14T00:18:26.534Z: File received {"name":"Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf","type":"application/pdf","size":1494463}
+2026-01-14T00:18:26.535Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768349906535-287073093-Bjorn_Andre_Lie_CV_FOR_AI_MATCH_SCORE.pdf"
+2026-01-14T00:18:26.535Z: File saved successfully 
+2026-01-14T00:18:26.535Z: Starting PDF parsing for text extraction 
+2026-01-14T00:18:26.639Z: pdfParser ready 
+2026-01-14T00:18:26.639Z: PDF parsed, text length: 5698
+2026-01-14T00:18:26.639Z: Saving to database 
+2026-01-14T00:18:26.688Z: Database save complete 
+2026-01-14T15:14:33.300Z: uploadCVAction started 
+2026-01-14T15:14:33.304Z: Session check {"userId":"12346"}
+2026-01-14T15:14:33.305Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-14T15:14:33.306Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768403673306-33434135-Emilie_Karlsen_Test_CV.pdf"
+2026-01-14T15:14:33.306Z: File saved successfully 
+2026-01-14T15:14:33.306Z: Starting PDF parsing for text extraction 
+2026-01-14T15:14:33.345Z: pdfParser ready 
+2026-01-14T15:14:33.345Z: PDF parsed, text length: 595
+2026-01-14T15:14:33.345Z: Saving to database 
+2026-01-14T15:14:33.440Z: Database save complete 
+2026-01-18T20:01:32.698Z: uploadCVAction started 
+2026-01-18T20:01:32.700Z: Session check {"userId":"12346"}
+2026-01-18T20:01:32.700Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T20:01:32.700Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768766492700-810452348-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T20:01:32.701Z: File saved successfully 
+2026-01-18T20:01:32.702Z: Starting PDF parsing for text extraction 
+2026-01-18T20:01:32.725Z: pdfParser ready 
+2026-01-18T20:01:32.726Z: PDF parsed, text length: 595
+2026-01-18T20:01:32.726Z: Saving to database 
+2026-01-18T20:01:32.815Z: Database save complete 
+2026-01-18T20:31:58.555Z: uploadCVAction started 
+2026-01-18T20:31:58.557Z: Session check {"userId":"12346"}
+2026-01-18T20:31:58.558Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T20:31:58.558Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768768318558-521594316-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T20:31:58.558Z: File saved successfully 
+2026-01-18T20:31:58.558Z: Starting PDF parsing for text extraction 
+2026-01-18T20:31:58.578Z: pdfParser ready 
+2026-01-18T20:31:58.578Z: PDF parsed, text length: 595
+2026-01-18T20:31:58.578Z: Saving to database 
+2026-01-18T20:31:58.588Z: Database save complete 
+2026-01-18T20:32:28.663Z: uploadCVAction started 
+2026-01-18T20:32:28.665Z: Session check {"userId":"12346"}
+2026-01-18T20:32:28.665Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T20:32:28.666Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768768348666-421198874-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T20:32:28.666Z: File saved successfully 
+2026-01-18T20:32:28.666Z: Starting PDF parsing for text extraction 
+2026-01-18T20:32:28.672Z: pdfParser ready 
+2026-01-18T20:32:28.673Z: PDF parsed, text length: 595
+2026-01-18T20:32:28.673Z: Saving to database 
+2026-01-18T20:32:28.681Z: Database save complete 
+2026-01-18T21:26:18.226Z: uploadCVAction started 
+2026-01-18T21:26:18.229Z: Session check {"userId":"12346"}
+2026-01-18T21:26:18.229Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T21:26:18.230Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768771578230-16623844-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T21:26:18.231Z: File saved successfully 
+2026-01-18T21:26:18.231Z: Starting PDF parsing for text extraction 
+2026-01-18T21:26:18.257Z: pdfParser ready 
+2026-01-18T21:26:18.257Z: PDF parsed, text length: 595
+2026-01-18T21:26:18.257Z: Saving to database 
+2026-01-18T21:26:18.267Z: Database save complete 
+2026-01-18T21:40:45.539Z: uploadCVAction started 
+2026-01-18T21:40:45.541Z: Session check {"userId":"12346"}
+2026-01-18T21:40:45.541Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T21:40:45.541Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768772445541-415828469-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T21:40:45.542Z: File saved successfully 
+2026-01-18T21:40:45.542Z: Starting PDF parsing for text extraction 
+2026-01-18T21:40:45.556Z: pdfParser ready 
+2026-01-18T21:40:45.556Z: PDF parsed, text length: 595
+2026-01-18T21:40:45.556Z: Saving to database 
+2026-01-18T21:40:45.564Z: Database save complete 
+2026-01-18T21:44:42.246Z: uploadCVAction started 
+2026-01-18T21:44:42.247Z: Session check {"userId":"12346"}
+2026-01-18T21:44:42.247Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T21:44:42.248Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768772682248-30093600-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T21:44:42.248Z: File saved successfully 
+2026-01-18T21:44:42.248Z: Starting PDF parsing for text extraction 
+2026-01-18T21:44:42.260Z: pdfParser ready 
+2026-01-18T21:44:42.260Z: PDF parsed, text length: 595
+2026-01-18T21:44:42.260Z: Saving to database 
+2026-01-18T21:44:42.268Z: Database save complete 
+2026-01-18T21:45:07.324Z: uploadCVAction started 
+2026-01-18T21:45:07.327Z: Session check {"userId":"12346"}
+2026-01-18T21:45:07.327Z: File received {"name":"Emilie_Karlsen_Test_CV.pdf","type":"application/pdf","size":2315}
+2026-01-18T21:45:07.327Z: Saving file to "/Users/bjornandre.lie/Documents/dev/JobsAI/storage/cvs/1768772707327-451544895-Emilie_Karlsen_Test_CV.pdf"
+2026-01-18T21:45:07.327Z: File saved successfully 
+2026-01-18T21:45:07.327Z: Starting PDF parsing for text extraction 
+2026-01-18T21:45:07.335Z: pdfParser ready 
+2026-01-18T21:45:07.336Z: PDF parsed, text length: 595
+2026-01-18T21:45:07.336Z: Saving to database 
+2026-01-18T21:45:07.345Z: Database save complete 
