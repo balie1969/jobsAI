@@ -35,6 +35,10 @@ export function JobTable({ initialJobs, currentScore }: JobTableProps) {
     const router = useRouter();
     const [selectedJob, setSelectedJob] = React.useState<Job | null>(null);
     const [statusFilter, setStatusFilter] = React.useState<string>("all");
+    const [sortConfig, setSortConfig] = React.useState<{ key: keyof Job; direction: "asc" | "desc" }>({
+        key: "matchscore",
+        direction: "desc",
+    });
 
     // Sync selectedJob with initialJobs when data revalidates (e.g. after Mark as Applied)
     React.useEffect(() => {
@@ -58,13 +62,37 @@ export function JobTable({ initialJobs, currentScore }: JobTableProps) {
         return d.getFullYear() === 1900;
     };
 
-    const filteredJobs = initialJobs.filter(job => {
-        if (statusFilter === "all") return true;
-        if (statusFilter === "usokte") return !job.applied_for;
-        if (statusFilter === "sokte") return job.applied_for && !isNotRelevant(job.applied_for);
-        if (statusFilter === "ikke_relevante") return job.applied_for && isNotRelevant(job.applied_for);
-        return true;
-    });
+    const handleSort = (key: keyof Job) => {
+        setSortConfig((current) => ({
+            key,
+            direction: current.key === key && current.direction === "asc" ? "desc" : "asc",
+        }));
+    };
+
+    const getSortedJobs = (jobs: Job[]) => {
+        return [...jobs].sort((a, b) => {
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            if (aValue === null && bValue === null) return 0;
+            if (aValue === null) return 1;
+            if (bValue === null) return -1;
+
+            if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+            return 0;
+        });
+    };
+
+    const filteredJobs = getSortedJobs(
+        initialJobs.filter(job => {
+            if (statusFilter === "all") return true;
+            if (statusFilter === "usokte") return !job.applied_for;
+            if (statusFilter === "sokte") return job.applied_for && !isNotRelevant(job.applied_for);
+            if (statusFilter === "ikke_relevante") return job.applied_for && isNotRelevant(job.applied_for);
+            return true;
+        })
+    );
 
     return (
         <div className="space-y-4">
@@ -123,12 +151,32 @@ export function JobTable({ initialJobs, currentScore }: JobTableProps) {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px] font-bold">Score</TableHead>
-                            <TableHead className="font-bold">Frist</TableHead>
-                            <TableHead className="font-bold">Selskap</TableHead>
-                            <TableHead className="font-bold">Tittel</TableHead>
+                            <TableHead
+                                className="w-[100px] font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                onClick={() => handleSort("matchscore")}
+                            >
+                                Score {sortConfig.key === "matchscore" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                            </TableHead>
+                            <TableHead
+                                className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                onClick={() => handleSort("frist")}
+                            >
+                                Frist {sortConfig.key === "frist" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                            </TableHead>
+                            <TableHead
+                                className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                onClick={() => handleSort("company")}
+                            >
+                                Selskap <span className="font-normal text-muted-foreground">(klikk kolonne for sortering)</span> {sortConfig.key === "company" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                            </TableHead>
+                            <TableHead
+                                className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                onClick={() => handleSort("job_title")}
+                            >
+                                Tittel {sortConfig.key === "job_title" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                            </TableHead>
                             <TableHead className="font-bold">Status</TableHead>
-                            <TableHead className="text-right font-bold">Handling</TableHead>
+
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -163,16 +211,12 @@ export function JobTable({ initialJobs, currentScore }: JobTableProps) {
                                         )
                                     )}
                                 </TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="sm">
-                                        Vis
-                                    </Button>
-                                </TableCell>
+
                             </TableRow>
                         ))}
                         {filteredJobs.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={6} className="h-24 text-center">
+                                <TableCell colSpan={5} className="h-24 text-center">
                                     Ingen jobber funnet med valgt filter.
                                 </TableCell>
                             </TableRow>
