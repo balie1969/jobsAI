@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { loginAction, registerAction, forgotPasswordAction } from "@/app/auth-actions"; // We need to create these actions
+import { TermsOfUseDialog } from "./terms-of-use-dialog";
+import { PrivacyPolicyDialog } from "./privacy-policy-dialog";
 
 export function AuthForm() {
     const [view, setView] = useState<"login" | "register" | "forgot_password">("login");
@@ -143,6 +145,10 @@ export function AuthForm() {
                     </Button>
                 )}
             </CardFooter>
+            <div className="pb-4 text-center flex flex-col gap-1.5">
+                <PrivacyPolicyDialog />
+                <TermsOfUseDialog />
+            </div>
         </Card>
     );
 }
