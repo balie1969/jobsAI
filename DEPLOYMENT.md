@@ -49,6 +49,17 @@ Hvis du har gjort endringer i `docker-compose.yml` (f.eks. lagt til nye tjeneste
     sudo docker-compose pull && sudo docker-compose up -d
     ```
 
+## 3. Miljøvariabler (.env) - Viktig!
+Hvis du legger til nye API-nøkler eller endrer hemmeligheter i `.env.local` lokalt, må disse også manuelt legges inn i `.env.production` på serveren.
+
+1.  Logg inn på VPS.
+2.  Rediger filen: `nano .env.production` (eller bruk `sudo tee` metoden).
+3.  Etterpå må du alltid restarte appen for at endringene skal tre i kraft:
+    ```bash
+    sudo docker-compose down
+    sudo docker-compose up -d
+    ```
+
 ---
 
 ## Feilsøking
