@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  jobsai:
+    # Use the image from GitHub Container Registry
+    image: ghcr.io/balie1969/jobsai:latest
+    container_name: jobsai_app
+    # We keep 'build' here so it works for local dev 'docker-compose build' if needed,
+    # but on the server, we will pull the pre-built image.
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      # Mapping host port 3002 to container port 3000 as requested
+      - "3002:3000"
+    # Using env_file is cleaner for secrets
+    env_file:
+      - .env.production
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    container_name: jobs-ai-db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: jobs
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
