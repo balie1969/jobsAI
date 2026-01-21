@@ -128,10 +128,10 @@ export async function getMatchedJobs(userId: string | number, minScore: number =
   const dayMatch = timeframe.match(/^(\d+)d$/);
   if (dayMatch) {
     const days = parseInt(dayMatch[1]);
-    timeFilter = `AND fjmr.created_at >= NOW() - INTERVAL '${days} days'`;
+    timeFilter = `AND fj.created_at >= NOW() - INTERVAL '${days} days'`;
   } else if (timeframe === "48h") {
     // Keep backward compatibility if needed, or mapped to 2d
-    timeFilter = "AND fjmr.created_at >= NOW() - INTERVAL '48 hours'";
+    timeFilter = "AND fj.created_at >= NOW() - INTERVAL '48 hours'";
   }
 
   const query = `
@@ -361,9 +361,10 @@ export async function getUserSearches(internalId: number): Promise<UserSearch[]>
       us.*,
       ROUND(AVG(fj.score::float))::int AS avg_relevans_score,
       ROUND(AVG(fj.matchscore::float))::int AS avg_relevans_matchscore,
-      COUNT(DISTINCT CASE WHEN fj.created_at >= NOW() - INTERVAL '24 hours' THEN fj.job_id END)::int as scored_last_24h
+      COUNT(DISTINCT CASE WHEN real_fj.created_at >= NOW() - INTERVAL '24 hours' THEN fus.finn_id END)::int as scored_last_24h
     FROM "user_searches" us
     LEFT JOIN "finn_job_user_status" fus ON us.id = fus.search_id
+    LEFT JOIN "finn_jobs" real_fj ON fus.finn_id = real_fj.finn_id
     LEFT JOIN "finn_job_match_result" fj 
       ON fus.finn_id = fj.job_id 
       AND fus.user_id = fj.user_id
@@ -558,8 +559,8 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
     const dayMatch = timeframe.match(/^(\d+)d$/);
     if (dayMatch) {
       const days = parseInt(dayMatch[1]);
-      // Filter based on match result creation time (when we analyzed it)
-      timeFilter = `AND fjmr.created_at >= NOW() - INTERVAL '${days} days'`;
+      // Filter based on job creation time (when it entered our system)
+      timeFilter = `AND fj.created_at >= NOW() - INTERVAL '${days} days'`;
     }
 
     // 2. Status Counts
@@ -576,6 +577,7 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
         COUNT(*) FILTER (WHERE applied_for = '1900-01-01') as not_relevant
       FROM finn_job_user_status fjus
       LEFT JOIN finn_job_match_result fjmr ON fjus.finn_id = fjmr.job_id AND fjus.user_id = fjmr.user_id
+      JOIN finn_jobs fj ON fjus.finn_id = fj.finn_id
       WHERE fjus.user_id = $1
       ${timeFilter}
     `;
@@ -605,15 +607,16 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
     // 4. Daily Activity (New jobs analyzed in last 7 days OR filtered timeframe)
     const activityQuery = `
       SELECT 
-        TO_CHAR(created_at, 'Dy') as day,
-        TO_CHAR(created_at, 'YYYY-MM-DD') as date,
-        COUNT(*) as count
+        TO_CHAR(fj.created_at, 'Dy') as day,
+        TO_CHAR(fj.created_at, 'YYYY-MM-DD') as date,
+        COUNT(DISTINCT fj.finn_id) as count
       FROM finn_job_match_result fjmr
-      WHERE user_id = $1
+      JOIN finn_jobs fj ON fjmr.job_id = fj.finn_id
+      WHERE fjmr.user_id = $1
       AND matchscore >= $2
       ${timeFilter} -- Applies the X days filter logic directly
       -- Default fall-back if no filter (though "all" implies all time, usually restricted to reasonable history for graph)
-      ${!timeFilter ? "AND created_at >= NOW() - INTERVAL '29 days'" : ""} 
+      ${!timeFilter ? "AND fj.created_at >= NOW() - INTERVAL '29 days'" : ""} 
       GROUP BY day, date
       ORDER BY date ASC
     `;

@@ -230,7 +230,7 @@ export function UserSearchesButton() {
                                                                     </span>
                                                                 )}
                                                                 {search.scored_last_24h !== undefined && (
-                                                                    <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall jobber scoret siste 24 timer">
+                                                                    <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall nye stillinger siste 24 timer">
                                                                         Siste 24t: {search.scored_last_24h}
                                                                     </span>
                                                                 )}
