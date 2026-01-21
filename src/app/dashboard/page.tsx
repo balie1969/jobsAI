@@ -1,4 +1,4 @@
-import { getMatchedJobs, getUserById } from "@/lib/db";
+import { getMatchedJobs, getUserById, getUserCVs, getDashboardStats } from "@/lib/db";
 import { JobTable } from "@/components/job-table";
 import { getSession, logout } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -7,7 +7,7 @@ import { UserProfileButton } from "@/components/user-profile-sheet";
 import { UserSearchesButton } from "@/components/user-searches-sheet";
 import { ScoringProgress } from "@/components/scoring-progress";
 import { StatsCharts } from "@/components/dashboard/stats-charts";
-import { getDashboardStats } from "@/lib/db";
+import { DashboardNotifications } from "@/components/dashboard-notifications";
 
 export default async function DashboardPage({
   searchParams,
@@ -26,6 +26,7 @@ export default async function DashboardPage({
   // Pass session.userId (assuming it was stored as userId in session)
   const initialJobs = await getMatchedJobs(session.userId, minScore, currentTimeframe);
   const user = await getUserById(session.userId);
+  const cvs = await getUserCVs(session.internalId);
   const stats = await getDashboardStats(session.internalId, minScore, currentTimeframe);
 
   return (
@@ -50,6 +51,7 @@ export default async function DashboardPage({
         </div>
       </div>
 
+      <DashboardNotifications user={user} cvCount={cvs.length} />
       <ScoringProgress />
       {stats && <StatsCharts stats={stats} />}
       <JobTable initialJobs={initialJobs} currentScore={minScore} currentTimeframe={currentTimeframe} />
