@@ -66,7 +66,7 @@ export function StatsCharts({ stats }: StatsProps) {
             {/* 4. Activity (Area) */}
             <Card>
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Nye Jobber (Siste 30 dager)</CardTitle>
+                    <CardTitle>Nye stillinger</CardTitle>
                 </CardHeader>
                 <CardContent className="h-[200px]">
                     <ActivityAreaChart data={stats.dailyActivity} />

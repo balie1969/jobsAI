@@ -195,9 +195,10 @@ export function UserSearchesButton() {
                                             <TableRow>
                                                 <TableHead className="w-[50px]">Aktiv</TableHead>
                                                 <TableHead>Fokus</TableHead>
-                                                {/* <TableHead>q-parameter</TableHead> */}
-                                                <TableHead>URL</TableHead>
-                                                <TableHead className="w-[80px]"></TableHead>
+                                                <TableHead>AI-Snitt</TableHead>
+                                                <TableHead>Nye (24t)</TableHead>
+                                                <TableHead>Lenke</TableHead>
+                                                <TableHead className="w-[50px]"></TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -210,32 +211,31 @@ export function UserSearchesButton() {
                                                         />
                                                     </TableCell>
                                                     <TableCell className="font-medium">{search.focus}</TableCell>
-                                                    {/* <TableCell>
-                                                        <code className="bg-muted px-1 py-0.5 rounded text-xs">{search.q_param}</code>
-                                                    </TableCell> */}
-                                                    <TableCell className="max-w-[300px] truncate">
-                                                        <a href={search.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
-                                                            Lenke <ExternalLink className="w-3 h-3" />
-                                                        </a>
-                                                        {(search.avg_relevans_score || search.avg_relevans_matchscore) && (
-                                                            <div className="flex gap-2 mt-1">
-                                                                {search.avg_relevans_score && (
-                                                                    <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-medium" title="Gjennomsnittlig Relevans-score for matcher over 70%">
-                                                                        Avg. Relevans: {search.avg_relevans_score}
-                                                                    </span>
-                                                                )}
-                                                                {search.avg_relevans_matchscore && (
-                                                                    <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full font-medium" title="Gjennomsnittlig Match-score for matcher over 70%">
-                                                                        Avg. Match: {search.avg_relevans_matchscore}%
-                                                                    </span>
-                                                                )}
-                                                                {search.scored_last_24h !== undefined && (
-                                                                    <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall nye stillinger siste 24 timer">
-                                                                        Siste 24t: {search.scored_last_24h}
-                                                                    </span>
-                                                                )}
-                                                            </div>
+                                                    <TableCell>
+                                                        <div className="flex flex-col gap-1">
+                                                            {search.avg_relevans_score && (
+                                                                <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-medium w-fit" title="Gjennomsnittlig Relevans-score for matcher over 70%">
+                                                                    Relevans: {search.avg_relevans_score}
+                                                                </span>
+                                                            )}
+                                                            {search.avg_relevans_matchscore && (
+                                                                <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full font-medium w-fit" title="Gjennomsnittlig Match-score for matcher over 70%">
+                                                                    Match: {search.avg_relevans_matchscore}%
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {search.scored_last_24h !== undefined && (
+                                                            <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall nye stillinger siste 24 timer">
+                                                                {search.scored_last_24h}
+                                                            </span>
                                                         )}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <a href={search.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 flex items-center gap-1" title={search.url}>
+                                                            <ExternalLink className="w-4 h-4" />
+                                                        </a>
                                                     </TableCell>
                                                     <TableCell>
                                                         <Button
