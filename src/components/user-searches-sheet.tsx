@@ -48,7 +48,6 @@ export function UserSearchesButton() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [formData, setFormData] = useState({
         focus: "",
-        q_param: "",
         url: "",
     });
 
@@ -69,6 +68,12 @@ export function UserSearchesButton() {
                 setSearches(data);
                 setIsLoading(false);
             });
+        } else {
+            // Reset state when closing
+            setShowAddForm(false);
+            setFormData({ focus: "", url: "" });
+            setSaveStatusMessage(null);
+            setStatusMessage(null);
         }
     }, [open]);
 
@@ -79,7 +84,7 @@ export function UserSearchesButton() {
 
         const form = new FormData();
         form.append("focus", formData.focus);
-        form.append("q_param", formData.q_param);
+        // form.append("q_param", formData.q_param); // Deprecated
         form.append("url", formData.url);
 
         const result = await saveSearchAction(form);
@@ -94,7 +99,7 @@ export function UserSearchesButton() {
 
             setTimeout(() => {
                 setShowAddForm(false);
-                setFormData({ focus: "", q_param: "", url: "" });
+                setFormData({ focus: "", url: "" });
                 setSaveStatusMessage(null);
             }, 2500);
         } else {
@@ -184,13 +189,13 @@ export function UserSearchesButton() {
                                     Ingen lagrede søk enda.
                                 </p>
                             ) : (
-                                <div className="border rounded-md">
+                                <div className="border rounded-md max-h-[60vh] overflow-y-auto">
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
                                                 <TableHead className="w-[50px]">Aktiv</TableHead>
                                                 <TableHead>Fokus</TableHead>
-                                                <TableHead>q-parameter</TableHead>
+                                                {/* <TableHead>q-parameter</TableHead> */}
                                                 <TableHead>URL</TableHead>
                                                 <TableHead className="w-[80px]"></TableHead>
                                             </TableRow>
@@ -205,9 +210,9 @@ export function UserSearchesButton() {
                                                         />
                                                     </TableCell>
                                                     <TableCell className="font-medium">{search.focus}</TableCell>
-                                                    <TableCell>
+                                                    {/* <TableCell>
                                                         <code className="bg-muted px-1 py-0.5 rounded text-xs">{search.q_param}</code>
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                     <TableCell className="max-w-[300px] truncate">
                                                         <a href={search.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
                                                             Lenke <ExternalLink className="w-3 h-3" />
@@ -222,6 +227,11 @@ export function UserSearchesButton() {
                                                                 {search.avg_relevans_matchscore && (
                                                                     <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full font-medium" title="Gjennomsnittlig Match-score for matcher over 70%">
                                                                         Avg. Match: {search.avg_relevans_matchscore}%
+                                                                    </span>
+                                                                )}
+                                                                {search.scored_last_24h !== undefined && (
+                                                                    <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall jobber scoret siste 24 timer">
+                                                                        Siste 24t: {search.scored_last_24h}
                                                                     </span>
                                                                 )}
                                                             </div>
@@ -291,7 +301,7 @@ export function UserSearchesButton() {
                                         required
                                     />
                                 </div>
-                                <div className="grid gap-2">
+                                {/* <div className="grid gap-2">
                                     <Label htmlFor="q_param">q-parameter</Label>
                                     <Input
                                         id="q_param"
@@ -300,7 +310,7 @@ export function UserSearchesButton() {
                                         onChange={(e) => setFormData({ ...formData, q_param: e.target.value })}
                                         required
                                     />
-                                </div>
+                                </div> */}
                                 <div className="grid gap-2">
                                     <Label htmlFor="url">Full URL</Label>
                                     <Textarea

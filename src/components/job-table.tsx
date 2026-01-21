@@ -29,9 +29,10 @@ import { getScoreColorClass } from "@/lib/utils";
 interface JobTableProps {
     initialJobs: Job[];
     currentScore: number;
+    currentTimeframe: string;
 }
 
-export function JobTable({ initialJobs, currentScore }: JobTableProps) {
+export function JobTable({ initialJobs, currentScore, currentTimeframe }: JobTableProps) {
     const router = useRouter();
     const [selectedJob, setSelectedJob] = React.useState<Job | null>(null);
     const [statusFilter, setStatusFilter] = React.useState<string>("all");
@@ -53,7 +54,15 @@ export function JobTable({ initialJobs, currentScore }: JobTableProps) {
     }, [initialJobs, selectedJob]);
 
     const handleScoreChange = (value: string) => {
-        router.push(`/dashboard?score=${value}`);
+        const params = new URLSearchParams(window.location.search);
+        params.set("score", value);
+        router.push(`/dashboard?${params.toString()}`);
+    };
+
+    const handleTimeframeChange = (value: string) => {
+        const params = new URLSearchParams(window.location.search);
+        params.set("timeframe", value);
+        router.push(`/dashboard?${params.toString()}`);
     };
 
     const isNotRelevant = (date: string | Date | null) => {
@@ -132,6 +141,26 @@ export function JobTable({ initialJobs, currentScore }: JobTableProps) {
                                 <SelectItem value="usokte">Usøkte</SelectItem>
                                 <SelectItem value="sokte">Søkte</SelectItem>
                                 <SelectItem value="ikke_relevante">Ikke relevante</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="flex flex-col space-y-1.5">
+                        <span className="text-sm font-medium">Visning:</span>
+                        <Select
+                            defaultValue={currentTimeframe}
+                            onValueChange={handleTimeframeChange}
+                        >
+                            <SelectTrigger className="w-[140px]">
+                                <SelectValue placeholder="Velg visning" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Alle</SelectItem>
+                                {Array.from({ length: 7 }, (_, i) => i + 1).map((days) => (
+                                    <SelectItem key={days} value={`${days}d`}>
+                                        Siste {days} døgn
+                                    </SelectItem>
+                                ))}
                             </SelectContent>
                         </Select>
                     </div>

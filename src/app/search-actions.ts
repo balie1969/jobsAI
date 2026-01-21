@@ -17,10 +17,11 @@ export async function saveSearchAction(formData: FormData) {
     }
 
     const focus = formData.get("focus") as string;
-    const qParam = formData.get("q_param") as string;
+    // q_param is deprecated/handled by n8n, defaulting to empty string
+    const qParam = "";
     const url = formData.get("url") as string;
 
-    if (!focus || !qParam || !url) {
+    if (!focus || !url) {
         return { success: false, error: "Mangler obligatoriske felt" };
     }
 

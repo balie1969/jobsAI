@@ -12,19 +12,21 @@ import { getDashboardStats } from "@/lib/db";
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ score?: string }>;
+  searchParams: Promise<{ score?: string; timeframe?: string }>;
 }) {
   const session = await getSession();
   if (!session) {
     redirect("/");
   }
 
-  const { score } = await searchParams;
+  const { score, timeframe } = await searchParams;
   const minScore = score ? parseInt(score, 10) : 70;
+  const currentTimeframe = timeframe || "all";
+
   // Pass session.userId (assuming it was stored as userId in session)
-  const initialJobs = await getMatchedJobs(session.userId, minScore);
+  const initialJobs = await getMatchedJobs(session.userId, minScore, currentTimeframe);
   const user = await getUserById(session.userId);
-  const stats = await getDashboardStats(session.internalId, minScore);
+  const stats = await getDashboardStats(session.internalId, minScore, currentTimeframe);
 
   return (
     <div className="container mx-auto py-10">
@@ -32,6 +34,9 @@ export default async function DashboardPage({
         <h1 className="text-3xl font-bold">
           Job Match Dashboard {user?.fornavn ? `- ${user.fornavn}` : ""}
         </h1>
+        <p className="text-muted-foreground text-sm mt-1">
+          Antall jobber scoret siste 24 timer: {stats.scoredLast24h || 0}
+        </p>
         <div className="flex items-center gap-4">
           <UserSearchesButton />
           <UserProfileButton />
@@ -47,7 +52,7 @@ export default async function DashboardPage({
 
       <ScoringProgress />
       {stats && <StatsCharts stats={stats} />}
-      <JobTable initialJobs={initialJobs} currentScore={minScore} />
+      <JobTable initialJobs={initialJobs} currentScore={minScore} currentTimeframe={currentTimeframe} />
     </div>
   );
 }

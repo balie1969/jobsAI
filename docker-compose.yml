@@ -11,6 +11,8 @@ services:
       - .env.production
     networks:
       - postgres_internal
+    volumes:
+      - ./uploads:/app/public/uploads
 
 networks:
   postgres_internal:

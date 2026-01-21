@@ -121,7 +121,19 @@ export async function updateUser(userId: string | number, data: Partial<User>) {
   await pool.query(query, values);
 }
 
-export async function getMatchedJobs(userId: string | number, minScore: number = 70) {
+export async function getMatchedJobs(userId: string | number, minScore: number = 70, timeframe: string = "all") {
+  let timeFilter = "";
+
+  // Handle "Xd" pattern (e.g. 1d, 2d... 7d)
+  const dayMatch = timeframe.match(/^(\d+)d$/);
+  if (dayMatch) {
+    const days = parseInt(dayMatch[1]);
+    timeFilter = `AND fjmr.created_at >= NOW() - INTERVAL '${days} days'`;
+  } else if (timeframe === "48h") {
+    // Keep backward compatibility if needed, or mapped to 2d
+    timeFilter = "AND fjmr.created_at >= NOW() - INTERVAL '48 hours'";
+  }
+
   const query = `
     SELECT 
       fj.finn_id,
@@ -148,6 +160,7 @@ export async function getMatchedJobs(userId: string | number, minScore: number =
     WHERE fjmr.user_id = $2
     AND (fj.frist >= CURRENT_DATE OR fj.frist IS NULL) 
     AND matchscore >= $1
+    ${timeFilter}
     ORDER BY matchscore DESC, frist ASC NULLS FIRST
   `;
 
@@ -336,7 +349,9 @@ export interface UserSearch {
   aktiv: boolean;
   avg_relevans_score?: number;
   avg_relevans_matchscore?: number;
+  scored_last_24h?: number;
 }
+
 
 export async function getUserSearches(internalId: number): Promise<UserSearch[]> {
   // Use LEFT JOIN to include stats, filtering only high-relevance matches (>=70)
@@ -345,13 +360,13 @@ export async function getUserSearches(internalId: number): Promise<UserSearch[]>
     SELECT 
       us.*,
       ROUND(AVG(fj.score::float))::int AS avg_relevans_score,
-      ROUND(AVG(fj.matchscore::float))::int AS avg_relevans_matchscore
+      ROUND(AVG(fj.matchscore::float))::int AS avg_relevans_matchscore,
+      COUNT(DISTINCT CASE WHEN fj.created_at >= NOW() - INTERVAL '24 hours' THEN fj.job_id END)::int as scored_last_24h
     FROM "user_searches" us
     LEFT JOIN "finn_job_user_status" fus ON us.id = fus.search_id
     LEFT JOIN "finn_job_match_result" fj 
       ON fus.finn_id = fj.job_id 
       AND fus.user_id = fj.user_id
-      AND fj.matchscore >= 70
     WHERE us.user_id = $1
     GROUP BY us.id
     ORDER BY us.created_at DESC
@@ -360,7 +375,7 @@ export async function getUserSearches(internalId: number): Promise<UserSearch[]>
   return result.rows;
 }
 
-export async function addUserSearch(internalId: number, focus: string, qParam: string, url: string) {
+export async function addUserSearch(internalId: number, focus: string, qParam: string = "", url: string) {
   const query = `
     INSERT INTO "user_searches" (user_id, focus, q_param, url, aktiv)
     VALUES ($1, $2, $3, $4, true)
@@ -520,7 +535,7 @@ export async function checkJobExistsForUser(internalId: number, finnId: number) 
   }
 }
 
-export async function getDashboardStats(internalId: number, minScore: number = 70) {
+export async function getDashboardStats(internalId: number, minScore: number = 70, timeframe: string = "all") {
   const client = await pool.connect();
   try {
     // 1. Get logical user_id
@@ -535,12 +550,23 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
     }
     const logicalUserId = userRes.rows[0].user_id;
 
+    // Time filter logic
+    let timeFilter = "";
+    // Handle "Xd" pattern (e.g. 1d, 2d... 7d)
+    const dayMatch = timeframe.match(/^(\d+)d$/);
+    if (dayMatch) {
+      const days = parseInt(dayMatch[1]);
+      // Filter based on match result creation time (when we analyzed it)
+      timeFilter = `AND fjmr.created_at >= NOW() - INTERVAL '${days} days'`;
+    }
+
     // 2. Status Counts
     // Active: In dashboard (status table) AND unapplied (NULL)
     // Applied: applied_for != '1900-01-01'
     // Not Relevant: applied_for == '1900-01-01' (and applied_for is used to track hidden status)
     // IMPORTANT: Based on previous fix, deleted jobs are gone from status table.
     // So active = rows in status table where applied_for IS NULL.
+    // Added timeFilter for stats
     const statusQuery = `
       SELECT
         COUNT(*) FILTER (WHERE applied_for IS NULL AND matchscore >= $2) as active,
@@ -549,6 +575,7 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
       FROM finn_job_user_status fjus
       LEFT JOIN finn_job_match_result fjmr ON fjus.finn_id = fjmr.job_id AND fjus.user_id = fjmr.user_id
       WHERE fjus.user_id = $1
+      ${timeFilter}
     `;
     const statusRes = await client.query(statusQuery, [logicalUserId, minScore]);
     const statusCounts = {
@@ -565,6 +592,7 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
       JOIN finn_job_match_result fj ON fjus.finn_id = fj.job_id AND fjus.user_id = fj.user_id
       WHERE us.user_id = $1
       AND fj.matchscore >= $2
+      ${timeFilter.replace("fjmr.", "fj.")} -- Alias fix if needed, but here fj matches fjmr structure
       GROUP BY us.focus
       ORDER BY count DESC
       LIMIT 5
@@ -572,16 +600,18 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
     const topSearchesRes = await client.query(topSearchesQuery, [internalId, minScore]);
     const topSearches = topSearchesRes.rows.map(row => ({ name: row.name, count: parseInt(row.count) }));
 
-    // 4. Daily Activity (New jobs analyzed in last 7 days)
+    // 4. Daily Activity (New jobs analyzed in last 7 days OR filtered timeframe)
     const activityQuery = `
       SELECT 
         TO_CHAR(created_at, 'Dy') as day,
         TO_CHAR(created_at, 'YYYY-MM-DD') as date,
         COUNT(*) as count
-      FROM finn_job_match_result
+      FROM finn_job_match_result fjmr
       WHERE user_id = $1
       AND matchscore >= $2
-      AND created_at >= NOW() - INTERVAL '29 days'
+      ${timeFilter} -- Applies the X days filter logic directly
+      -- Default fall-back if no filter (though "all" implies all time, usually restricted to reasonable history for graph)
+      ${!timeFilter ? "AND created_at >= NOW() - INTERVAL '29 days'" : ""} 
       GROUP BY day, date
       ORDER BY date ASC
     `;
@@ -611,6 +641,7 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
       AND fjus.applied_for IS NULL -- Only active
       AND fjmr.matchscore >= $2 -- Configurable score
       AND (fj.frist >= CURRENT_DATE OR fj.frist IS NULL) -- Exclude expired
+      ${timeFilter}
       GROUP BY bucket
     `;
     const deadlineRes = await client.query(deadlineQuery, [logicalUserId, minScore]);
@@ -623,11 +654,22 @@ export async function getDashboardStats(internalId: number, minScore: number = 7
       return { bucket, count: row ? parseInt(row.count) : 0 };
     });
 
+    // 6. Scored Last 24h (Global)
+    const scoredLast24hQuery = `
+      SELECT COUNT(*) as count
+      FROM finn_job_match_result
+      WHERE user_id = $1
+      AND created_at >= NOW() - INTERVAL '24 hours'
+    `;
+    const scoredLast24hRes = await client.query(scoredLast24hQuery, [logicalUserId]);
+    const scoredLast24h = parseInt(scoredLast24hRes.rows[0].count);
+
     return {
       statusCounts,
       topSearches,
       dailyActivity,
-      deadlineStats
+      deadlineStats,
+      scoredLast24h
     };
 
   } finally {
