@@ -5,7 +5,7 @@ import { getSession } from "@/lib/auth";
 import { uploadUserCV, getUserCVs, setPrimaryCV, deleteUserCV, UserCV, getUserInternal } from "@/lib/db";
 import fs from "fs";
 import path from "path";
-import PDFParser from "pdf2json"; // Top-level import to ensure bundling
+// import PDFParser from "pdf2json"; // Top-level import to ensure bundling
 
 function logDebug(message: string, data?: any) {
     // Write to console so it shows up in docker logs
@@ -59,8 +59,11 @@ export async function uploadCVAction(formData: FormData) {
         logDebug("File saved successfully");
 
         // 2. Extract text using pdf2json
-        logDebug("Starting PDF parsing for text extraction");
+        logDebug("Skipping PDF parsing for debugging");
         let text = "";
+
+        /*
+        logDebug("Starting PDF parsing for text extraction");
 
         try {
             const pdfParser = new PDFParser(null, true); // true = raw text enable
@@ -75,7 +78,7 @@ export async function uploadCVAction(formData: FormData) {
                     logDebug("pdfParser error", errData);
                     // Don't fail the whole upload if parsing fails, just log it
                     // reject(errData.parserError); 
-                    resolve("");
+                    resolve(""); 
                 });
 
                 pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
@@ -123,9 +126,9 @@ export async function uploadCVAction(formData: FormData) {
             logDebug("PDF parsed, text length:", text.length);
         } catch (parseError: any) {
             logDebug("PDF parsing failed (non-fatal)", parseError.message);
-            // We continue even if text extraction fails, we have the file
             text = "";
         }
+        */
 
         // 3. Save to DB
         // Use relative path for serving or full path? 
