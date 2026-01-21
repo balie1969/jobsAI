@@ -440,7 +440,8 @@ export async function getJobScoringStats(internalId: number) {
       `SELECT COUNT(DISTINCT fjus.finn_id) 
        FROM finn_job_user_status fjus
        JOIN finn_jobs fj ON fjus.finn_id = fj.finn_id
-       WHERE fjus.user_id = $1`,
+       WHERE fjus.user_id = $1
+       AND (fj.frist >= CURRENT_DATE OR fj.frist IS NULL)`,
       [logicalUserId]
     );
     const total = parseInt(totalRes.rows[0].count);
@@ -458,6 +459,7 @@ export async function getJobScoringStats(internalId: number) {
        FROM finn_job_user_status fjus
        JOIN finn_jobs fj ON fjus.finn_id = fj.finn_id
        WHERE fjus.user_id = $1
+       AND (fj.frist >= CURRENT_DATE OR fj.frist IS NULL)
        EXCEPT
        SELECT job_id FROM finn_job_match_result WHERE user_id = $1`,
       [logicalUserId]
