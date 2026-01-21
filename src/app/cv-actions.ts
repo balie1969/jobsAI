@@ -51,7 +51,9 @@ export async function uploadCVAction(formData: FormData) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const filename = file.name.replace(/[^a-zA-Z0-9.-]/g, '_'); // Sanitize
         const savedFilename = `${uniqueSuffix}-${filename}`;
-        const uploadDir = path.resolve(process.cwd(), "storage", "cvs");
+
+        // Use public/uploads which is mounted to a volume in Docker
+        const uploadDir = path.resolve(process.cwd(), "public", "uploads");
 
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });

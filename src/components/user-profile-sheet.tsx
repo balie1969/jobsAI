@@ -137,11 +137,23 @@ export function UserProfileButton() {
                 // Optionally clear success message after a few seconds
                 setTimeout(() => setUploadSuccess(false), 3000);
             } else {
-                alert("Kunne ikke laste opp CV: " + result.error);
+                setAlertConfig({
+                    open: true,
+                    title: "Feil ved opplasting",
+                    description: "Kunne ikke laste opp CV: " + result.error,
+                    action: () => { },
+                    buttonText: "OK"
+                });
             }
         } catch (error) {
             console.error("Client-side upload error:", error);
-            alert("Klientfeil ved opplasting: " + String(error));
+            setAlertConfig({
+                open: true,
+                title: "Systemfeil",
+                description: "En uventet feil oppstod ved opplasting av filen. Vennligst prøv igjen senere. Detaljer: " + String(error),
+                action: () => { },
+                buttonText: "OK"
+            });
             setIsUploading(false);
         }
     };
