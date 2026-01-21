@@ -5,22 +5,15 @@ import { getSession } from "@/lib/auth";
 import { uploadUserCV, getUserCVs, setPrimaryCV, deleteUserCV, UserCV, getUserInternal } from "@/lib/db";
 import fs from "fs";
 import path from "path";
-
+import PDFParser from "pdf2json"; // Top-level import to ensure bundling
 
 function logDebug(message: string, data?: any) {
-    const logPath = path.resolve(process.cwd(), "server-debug.log");
-    const timestamp = new Date().toISOString();
-    const logMessage = `${timestamp}: ${message} ${data ? JSON.stringify(data) : ''}\n`;
-    try {
-        fs.appendFileSync(logPath, logMessage);
-    } catch (e) {
-        console.error("Failed to write to debug log", e);
-    }
+    // Write to console so it shows up in docker logs
+    console.log(`[CV-UPLOAD] ${message}`, data ? JSON.stringify(data) : '');
 }
 
 export async function uploadCVAction(formData: FormData) {
     console.log("SERVER: uploadCVAction called!");
-    const PDFParser = require("pdf2json"); // Comment out potential breaker
     logDebug("uploadCVAction started");
 
     // Test direct return to verify connection
@@ -56,6 +49,7 @@ export async function uploadCVAction(formData: FormData) {
         const uploadDir = path.resolve(process.cwd(), "public", "uploads");
 
         if (!fs.existsSync(uploadDir)) {
+            // This might throw if permissions are bad, but we catch it below
             fs.mkdirSync(uploadDir, { recursive: true });
         }
 
@@ -69,7 +63,7 @@ export async function uploadCVAction(formData: FormData) {
         let text = "";
 
         try {
-            const pdfParser = new PDFParser(null, 1); // 1 = raw text
+            const pdfParser = new PDFParser(null, true); // true = raw text enable
 
             text = await new Promise<string>((resolve, reject) => {
                 const timeout = setTimeout(() => {
@@ -79,7 +73,9 @@ export async function uploadCVAction(formData: FormData) {
                 pdfParser.on("pdfParser_dataError", (errData: any) => {
                     clearTimeout(timeout);
                     logDebug("pdfParser error", errData);
-                    reject(errData.parserError);
+                    // Don't fail the whole upload if parsing fails, just log it
+                    // reject(errData.parserError); 
+                    resolve("");
                 });
 
                 pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
@@ -121,7 +117,7 @@ export async function uploadCVAction(formData: FormData) {
                     pdfParser.parseBuffer(buffer);
                 } catch (e) {
                     clearTimeout(timeout);
-                    reject(e);
+                    resolve(""); // Safe fail
                 }
             });
             logDebug("PDF parsed, text length:", text.length);
@@ -132,6 +128,9 @@ export async function uploadCVAction(formData: FormData) {
         }
 
         // 3. Save to DB
+        // Use relative path for serving or full path? 
+        // We save the full path for backend usage, but for serving we might need URL.
+        // For now, let's keep it as is.
         logDebug("Saving to database");
         await uploadUserCV(session.internalId, {
             filename: file.name,
