@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JobDetailsSheet } from "./job-details-sheet";
@@ -145,12 +146,9 @@ export function JobTable({ initialJobs, currentScore, currentTimeframe }: JobTab
                         </Select>
                     </div>
 
-                    <div className="flex flex-col space-y-1.5">
-                        <span className="text-sm font-medium">Visning:</span>
-                        <Select
-                            defaultValue={currentTimeframe}
-                            onValueChange={handleTimeframeChange}
-                        >
+                    <div className="flex flex-col gap-1.5 w-full sm:w-[180px]">
+                        <Label className="text-sm font-medium">Nye stillinger:</Label>
+                        <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>
                             <SelectTrigger className="w-[140px]">
                                 <SelectValue placeholder="Velg visning" />
                             </SelectTrigger>
