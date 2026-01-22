@@ -162,7 +162,7 @@ export function UserSearchesButton() {
             <DialogTrigger asChild>
                 <Button variant="ghost" className="text-sm font-medium hover:underline text-muted-foreground">Mine søk</Button>
             </DialogTrigger>
-            <DialogContent className="w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-h-[90vh] overflow-y-auto w-full sm:max-w-4xl">
                 <DialogHeader>
                     <DialogTitle>Mine lagrede søk</DialogTitle>
                     <DialogDescription>
