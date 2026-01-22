@@ -232,7 +232,7 @@ export function UserProfileButton() {
             <DialogTrigger asChild>
                 <Button variant="ghost" className="text-sm font-medium hover:underline text-muted-foreground">Min konto</Button>
             </DialogTrigger>
-            <DialogContent className="max-h-[90vh] overflow-y-auto w-full sm:max-w-xl">
+            <DialogContent className="max-h-[85vh] overflow-y-auto w-[90vw] sm:w-full sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Min konto</DialogTitle>
                     <DialogDescription>
