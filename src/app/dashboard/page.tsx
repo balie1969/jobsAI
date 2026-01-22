@@ -30,15 +30,17 @@ export default async function DashboardPage({
   const stats = await getDashboardStats(session.internalId, minScore, currentTimeframe);
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">
-          Job Match Dashboard {user?.fornavn ? `- ${user.fornavn}` : ""}
-        </h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Antall jobber scoret siste 24 timer: {stats.scoredLast24h || 0}
-        </p>
-        <div className="flex items-center gap-4">
+    <div className="container mx-auto py-4 sm:py-10 px-4 sm:px-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Job Match Dashboard {user?.fornavn ? `- ${user.fornavn}` : ""}
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Antall jobber scoret siste 24 timer: {stats.scoredLast24h || 0}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full md:w-auto">
           <UserSearchesButton />
           <UserProfileButton />
           <form action={async () => {

@@ -175,81 +175,129 @@ export function JobTable({ initialJobs, currentScore, currentTimeframe }: JobTab
             </div>
 
             <div className="rounded-md border">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead
-                                className="w-[100px] font-bold cursor-pointer hover:bg-muted/50 transition-colors"
-                                onClick={() => handleSort("matchscore")}
-                            >
-                                Score {sortConfig.key === "matchscore" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                            </TableHead>
-                            <TableHead
-                                className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
-                                onClick={() => handleSort("frist")}
-                            >
-                                Frist {sortConfig.key === "frist" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                            </TableHead>
-                            <TableHead
-                                className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
-                                onClick={() => handleSort("company")}
-                            >
-                                Selskap <span className="font-normal text-muted-foreground">(klikk kolonne for sortering)</span> {sortConfig.key === "company" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                            </TableHead>
-                            <TableHead
-                                className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
-                                onClick={() => handleSort("job_title")}
-                            >
-                                Tittel {sortConfig.key === "job_title" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                            </TableHead>
-                            <TableHead className="font-bold">Status</TableHead>
+                {/* Desktop Table View */}
+                <div className="hidden md:block">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead
+                                    className="w-[100px] font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                    onClick={() => handleSort("matchscore")}
+                                >
+                                    Score {sortConfig.key === "matchscore" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </TableHead>
+                                <TableHead
+                                    className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                    onClick={() => handleSort("frist")}
+                                >
+                                    Frist {sortConfig.key === "frist" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </TableHead>
+                                <TableHead
+                                    className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                    onClick={() => handleSort("company")}
+                                >
+                                    Selskap <span className="font-normal text-muted-foreground">(klikk kolonne for sortering)</span> {sortConfig.key === "company" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </TableHead>
+                                <TableHead
+                                    className="font-bold cursor-pointer hover:bg-muted/50 transition-colors"
+                                    onClick={() => handleSort("job_title")}
+                                >
+                                    Tittel {sortConfig.key === "job_title" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </TableHead>
+                                <TableHead className="font-bold">Status</TableHead>
 
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredJobs.map((job) => (
-                            <TableRow
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredJobs.map((job) => (
+                                <TableRow
+                                    key={job.finn_id}
+                                    className="cursor-pointer hover:bg-muted/50"
+                                    onClick={() => setSelectedJob(job)}
+                                >
+                                    <TableCell className="font-medium">
+                                        <ScoreBadge score={job.matchscore} />
+                                    </TableCell>
+                                    <TableCell>
+                                        {job.frist
+                                            ? format(new Date(job.frist), "d. MMM yyyy", { locale: nb })
+                                            : "Snarest"}
+                                    </TableCell>
+                                    <TableCell>{job.company}</TableCell>
+                                    <TableCell>{job.job_title}</TableCell>
+                                    <TableCell>
+                                        {job.applied_for && (
+                                            job.applied_for.toString().startsWith("1900-01-01") || new Date(job.applied_for).getFullYear() === 1900 ? (
+                                                <Badge variant="outline" className="text-red-600 border-red-600 whitespace-nowrap">
+                                                    <XCircle className="w-3 h-3 mr-1" />
+                                                    Ikke relevant
+                                                </Badge>
+                                            ) : (
+                                                <Badge variant="outline" className="text-green-600 border-green-600 whitespace-nowrap">
+                                                    <CheckCircle2 className="w-3 h-3 mr-1" />
+                                                    Søkt: {format(new Date(job.applied_for), "yyyy-MM-dd")}
+                                                </Badge>
+                                            )
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                            {filteredJobs.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-24 text-center">
+                                        Ingen jobber funnet med valgt filter.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden divide-y">
+                    {filteredJobs.length === 0 ? (
+                        <div className="p-8 text-center text-muted-foreground text-sm">
+                            Ingen jobber funnet med valgt filter.
+                        </div>
+                    ) : (
+                        filteredJobs.map((job) => (
+                            <div
                                 key={job.finn_id}
-                                className="cursor-pointer hover:bg-muted/50"
+                                className="p-4 cursor-pointer hover:bg-muted/50 active:bg-muted transition-colors flex flex-col gap-2"
                                 onClick={() => setSelectedJob(job)}
                             >
-                                <TableCell className="font-medium">
+                                <div className="flex justify-between items-start">
+                                    <h3 className="font-semibold text-sm line-clamp-2 pr-2">{job.job_title}</h3>
                                     <ScoreBadge score={job.matchscore} />
-                                </TableCell>
-                                <TableCell>
-                                    {job.frist
-                                        ? format(new Date(job.frist), "d. MMM yyyy", { locale: nb })
-                                        : "Snarest"}
-                                </TableCell>
-                                <TableCell>{job.company}</TableCell>
-                                <TableCell>{job.job_title}</TableCell>
-                                <TableCell>
+                                </div>
+
+                                <p className="text-sm text-muted-foreground">{job.company}</p>
+
+                                <div className="flex justify-between items-center text-xs mt-1">
+                                    <span className="text-muted-foreground">
+                                        Frist: {job.frist
+                                            ? format(new Date(job.frist), "d. MMM", { locale: nb })
+                                            : "Snarest"}
+                                    </span>
+
                                     {job.applied_for && (
                                         job.applied_for.toString().startsWith("1900-01-01") || new Date(job.applied_for).getFullYear() === 1900 ? (
-                                            <Badge variant="outline" className="text-red-600 border-red-600 whitespace-nowrap">
+                                            <div className="flex items-center text-red-600 font-medium">
                                                 <XCircle className="w-3 h-3 mr-1" />
                                                 Ikke relevant
-                                            </Badge>
+                                            </div>
                                         ) : (
-                                            <Badge variant="outline" className="text-green-600 border-green-600 whitespace-nowrap">
+                                            <div className="flex items-center text-green-600 font-medium">
                                                 <CheckCircle2 className="w-3 h-3 mr-1" />
-                                                Søkt: {format(new Date(job.applied_for), "yyyy-MM-dd")}
-                                            </Badge>
+                                                Søkt
+                                            </div>
                                         )
                                     )}
-                                </TableCell>
-
-                            </TableRow>
-                        ))}
-                        {filteredJobs.length === 0 && (
-                            <TableRow>
-                                <TableCell colSpan={5} className="h-24 text-center">
-                                    Ingen jobber funnet med valgt filter.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
             </div>
 
             <JobDetailsSheet

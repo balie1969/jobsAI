@@ -162,7 +162,7 @@ export function UserSearchesButton() {
             <DialogTrigger asChild>
                 <Button variant="ghost" className="text-sm font-medium hover:underline text-muted-foreground">Mine søk</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-4xl">
+            <DialogContent className="w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Mine lagrede søk</DialogTitle>
                     <DialogDescription>
@@ -190,68 +190,112 @@ export function UserSearchesButton() {
                                 </p>
                             ) : (
                                 <div className="border rounded-md max-h-[60vh] overflow-y-auto">
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead className="w-[50px]">Aktiv</TableHead>
-                                                <TableHead>Fokus</TableHead>
-                                                <TableHead>AI-Snitt</TableHead>
-                                                <TableHead>Nye (24t)</TableHead>
-                                                <TableHead>Lenke</TableHead>
-                                                <TableHead className="w-[50px]"></TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {searches.map((search) => (
-                                                <TableRow key={search.id}>
-                                                    <TableCell>
+                                    {/* Desktop Table View */}
+                                    <div className="hidden md:block">
+                                        <Table>
+                                            <TableHeader>
+                                                <TableRow>
+                                                    <TableHead className="w-[50px]">Aktiv</TableHead>
+                                                    <TableHead>Fokus</TableHead>
+                                                    <TableHead>AI-Snitt</TableHead>
+                                                    <TableHead>Nye (24t)</TableHead>
+                                                    <TableHead>Lenke</TableHead>
+                                                    <TableHead className="w-[50px]"></TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {searches.map((search) => (
+                                                    <TableRow key={search.id}>
+                                                        <TableCell>
+                                                            <Checkbox
+                                                                checked={!!search.aktiv}
+                                                                onChange={() => handleToggleStatus(search.id, !!search.aktiv)}
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell className="font-medium">{search.focus}</TableCell>
+                                                        <TableCell>
+                                                            <div className="flex flex-col gap-1">
+                                                                {search.avg_relevans_score && (
+                                                                    <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-medium w-fit" title="Gjennomsnittlig Relevans-score for matcher over 70%">
+                                                                        Relevans: {search.avg_relevans_score}
+                                                                    </span>
+                                                                )}
+                                                                {search.avg_relevans_matchscore && (
+                                                                    <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full font-medium w-fit" title="Gjennomsnittlig Match-score for matcher over 70%">
+                                                                        Match: {search.avg_relevans_matchscore}%
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {search.scored_last_24h !== undefined && (
+                                                                <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall nye stillinger siste 24 timer">
+                                                                    {search.scored_last_24h}
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <a href={search.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 flex items-center gap-1" title={search.url}>
+                                                                <ExternalLink className="w-4 h-4" />
+                                                            </a>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-8 w-8 text-muted-foreground hover:text-red-600"
+                                                                onClick={() => handleDeleteClick(search.id)}
+                                                                type="button"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </Button>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+
+                                    {/* Mobile Card View */}
+                                    <div className="md:hidden divide-y">
+                                        {searches.map((search) => (
+                                            <div key={search.id} className="p-4 flex flex-col gap-3">
+                                                <div className="flex items-start justify-between">
+                                                    <div className="flex items-center gap-2">
                                                         <Checkbox
                                                             checked={!!search.aktiv}
                                                             onChange={() => handleToggleStatus(search.id, !!search.aktiv)}
                                                         />
-                                                    </TableCell>
-                                                    <TableCell className="font-medium">{search.focus}</TableCell>
-                                                    <TableCell>
-                                                        <div className="flex flex-col gap-1">
-                                                            {search.avg_relevans_score && (
-                                                                <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-medium w-fit" title="Gjennomsnittlig Relevans-score for matcher over 70%">
-                                                                    Relevans: {search.avg_relevans_score}
-                                                                </span>
-                                                            )}
-                                                            {search.avg_relevans_matchscore && (
-                                                                <span className="text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full font-medium w-fit" title="Gjennomsnittlig Match-score for matcher over 70%">
-                                                                    Match: {search.avg_relevans_matchscore}%
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {search.scored_last_24h !== undefined && (
-                                                            <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full font-medium" title="Antall nye stillinger siste 24 timer">
-                                                                {search.scored_last_24h}
-                                                            </span>
-                                                        )}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <a href={search.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 flex items-center gap-1" title={search.url}>
+                                                        <span className="font-semibold text-sm">{search.focus}</span>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <a href={search.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 p-1">
                                                             <ExternalLink className="w-4 h-4" />
                                                         </a>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="icon"
-                                                            className="h-8 w-8 text-muted-foreground hover:text-red-600"
+                                                        <button
                                                             onClick={() => handleDeleteClick(search.id)}
-                                                            type="button"
+                                                            className="text-muted-foreground hover:text-red-600 p-1"
                                                         >
                                                             <Trash2 className="w-4 h-4" />
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center gap-2 flex-wrap text-xs pl-6">
+                                                    {search.scored_last_24h !== undefined && (
+                                                        <span className="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-medium">
+                                                            Nytt (24t): {search.scored_last_24h}
+                                                        </span>
+                                                    )}
+                                                    {search.avg_relevans_score && (
+                                                        <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-medium">
+                                                            Avg. Rel: {search.avg_relevans_score}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </div>
