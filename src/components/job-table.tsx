@@ -107,14 +107,14 @@ export function JobTable({ initialJobs, currentScore, currentTimeframe }: JobTab
     return (
         <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                <div className="flex gap-4">
+                <div className="grid grid-cols-2 sm:flex sm:flex-row gap-4 w-full sm:w-auto">
                     <div className="flex flex-col space-y-1.5">
                         <span className="text-sm font-medium">Minimum Score:</span>
                         <Select
                             defaultValue={currentScore.toString()}
                             onValueChange={handleScoreChange}
                         >
-                            <SelectTrigger className="w-[140px]">
+                            <SelectTrigger className="w-full sm:w-[140px]">
                                 <SelectValue placeholder="Select score" />
                             </SelectTrigger>
                             <SelectContent>
@@ -134,7 +134,7 @@ export function JobTable({ initialJobs, currentScore, currentTimeframe }: JobTab
                             value={statusFilter}
                             onValueChange={setStatusFilter}
                         >
-                            <SelectTrigger className="w-[180px]">
+                            <SelectTrigger className="w-full sm:w-[180px]">
                                 <SelectValue placeholder="Velg status" />
                             </SelectTrigger>
                             <SelectContent>
@@ -146,10 +146,10 @@ export function JobTable({ initialJobs, currentScore, currentTimeframe }: JobTab
                         </Select>
                     </div>
 
-                    <div className="flex flex-col gap-1.5 w-full sm:w-[180px]">
+                    <div className="flex flex-col gap-1.5 col-span-2 sm:col-span-1 w-full sm:w-[180px]">
                         <Label className="text-sm font-medium">Nye stillinger:</Label>
                         <Select value={currentTimeframe} onValueChange={handleTimeframeChange}>
-                            <SelectTrigger className="w-[140px]">
+                            <SelectTrigger className="w-full sm:w-[140px]">
                                 <SelectValue placeholder="Velg visning" />
                             </SelectTrigger>
                             <SelectContent>
