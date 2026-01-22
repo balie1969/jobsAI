@@ -232,7 +232,7 @@ export function UserProfileButton() {
             <DialogTrigger asChild>
                 <Button variant="ghost" className="text-sm font-medium hover:underline text-muted-foreground">Min konto</Button>
             </DialogTrigger>
-            <DialogContent className="max-h-[85vh] overflow-y-auto w-[90vw] sm:w-full sm:max-w-lg">
+            <DialogContent className="max-h-[85vh] overflow-y-auto overflow-x-hidden w-[90vw] sm:w-full sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Min konto</DialogTitle>
                     <DialogDescription>
@@ -334,19 +334,19 @@ export function UserProfileButton() {
                                             >
                                                 {/* Content Area - Clickable for setting primary */}
                                                 <div
-                                                    className="flex items-center gap-3 overflow-hidden flex-1 cursor-pointer"
+                                                    className="flex items-center gap-3 overflow-hidden flex-1 cursor-pointer min-w-0"
                                                     onClick={() => !cv.is_primary && handleSetPrimary(cv.id)}
                                                 >
-                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${cv.is_primary ? "border-blue-600" : "border-muted-foreground"}`}>
+                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center shrink-0 ${cv.is_primary ? "border-blue-600" : "border-muted-foreground"}`}>
                                                         {cv.is_primary && <div className="w-2 h-2 rounded-full bg-blue-600" />}
                                                     </div>
-                                                    <div className="flex flex-col overflow-hidden">
+                                                    <div className="flex flex-col overflow-hidden min-w-0">
                                                         <span className="text-sm font-medium truncate flex items-center gap-2">
-                                                            {cv.filename}
-                                                            {cv.is_primary && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full">Primær</span>}
+                                                            <span className="truncate">{cv.filename}</span>
+                                                            {cv.is_primary && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full shrink-0">Primær</span>}
                                                         </span>
                                                         <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                                            <Calendar className="w-3 h-3" />
+                                                            <Calendar className="w-3 h-3 shrink-0" />
                                                             Lastet opp: {new Date(cv.created_at).toLocaleDateString("no-NO", {
                                                                 day: "2-digit",
                                                                 month: "2-digit",
