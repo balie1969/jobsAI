@@ -245,7 +245,7 @@ export function UserProfileButton() {
                 ) : (
                     <div className="grid gap-6 py-4">
                         <form id="profile-form" onSubmit={handleSave} className="grid gap-4">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="fornavn">Fornavn</Label>
                                     <Input id="fornavn" value={formData.fornavn} onChange={handleChange} />
@@ -261,7 +261,7 @@ export function UserProfileButton() {
                                 <Input id="adresse" value={formData.adresse} onChange={handleChange} />
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="postnr">Postnr</Label>
                                     <Input
@@ -272,7 +272,7 @@ export function UserProfileButton() {
                                         maxLength={4}
                                     />
                                 </div>
-                                <div className="grid gap-2 col-span-2">
+                                <div className="grid gap-2 sm:col-span-2">
                                     <Label htmlFor="sted">Sted</Label>
                                     <Input id="sted" value={formData.sted} onChange={handleChange} readOnly className="bg-muted" />
                                 </div>
